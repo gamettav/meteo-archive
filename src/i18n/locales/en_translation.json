@@ -1,0 +1,10 @@
+{
+   "temperature": "Temperature",
+   "precipitation": "Precipitation",
+   "meteo-archive": "Meteo Archive",
+   "time": "Time",
+   "years": "Years",
+   "enter-year": "Enter a year",
+   "from": "From",
+   "to": "To"
+}
