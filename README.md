@@ -1,27 +1,29 @@
-# React + TypeScript + Vite
+# Temperature and Precipitation Visualization App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project is a visualization application that displays changes in temperature and precipitation levels over the past 120 years for a selected city. The application is built using TypeScript and React, and it uses the Canvas API to create interactive charts. The data is stored locally using IndexedDB.
 
-Currently, two official plugins are available:
+## Table of Contents
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-  [Installation](#installation)
+-  [Usage](#usage)
+-  [Features](#features)
+-  [Requirements](#requirements)
+-  [Contributing](#contributing)
+-  [License](#license)
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+To run the application locally, follow these steps:
 
-- Configure the top-level `parserOptions` property like this:
+1. Clone the repository to your local machine.
+2. Navigate to the project directory using the terminal.
+3. Run `npm install` to install the required dependencies.
+4. Run `npm run dev` to start the development server.
+5. Open your web browser and visit `http://localhost:3000` to view the application.
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+## Usage
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+1. Upon launching the application, you will see the default chart displaying temperature changes data for the entire 120-year period.
+2. Use the controls provided to select the start and end years to narrow down the data displayed on the chart.
+3. The chart is interactive, allowing you to explore temperature and precipitation changes over the selected period.
+4. Data is stored locally in IndexedDB.
