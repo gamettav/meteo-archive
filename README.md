@@ -1,4 +1,4 @@
-# Temperature and Precipitation Visualization App
+# Meteo Archive
 
 This project is a visualization application that displays changes in temperature and precipitation levels over the past 120 years for a selected city. The application is built using TypeScript and React, and it uses the Canvas API to create interactive charts. The data is stored locally using IndexedDB.
 
