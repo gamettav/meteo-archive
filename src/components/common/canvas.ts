@@ -1,6 +1,11 @@
-import { yAxisColors } from "@/const";
-import { AxisProp, DailyCastData, WeatherProps } from "@/types";
 import React from "react";
+import { yAxisColors } from "@/const";
+import type {
+   AxisProp,
+   DailyCastData,
+   WeatherProps,
+   CastDataEntry,
+} from "@/types";
 
 type Size = {
    w: number;
@@ -9,7 +14,7 @@ type Size = {
 
 type DrawChartParams = {
    canvasRef: React.RefObject<HTMLCanvasElement>;
-   data: DailyCastData[];
+   data: CastDataEntry[];
    size: Size;
    xAxisProp: AxisProp;
    yAxisPropList: AxisProp[];
@@ -27,7 +32,7 @@ export const drawChart = ({
    const canvas = canvasRef.current;
    const ctx = canvas?.getContext("2d");
 
-   if (ctx && canvas && data.length) {
+   if (ctx && canvas && data.length && data[0].data.length) {
       canvas.width = size.w;
       canvas.height = size.h;
       // clear canvas
@@ -37,14 +42,14 @@ export const drawChart = ({
       const margin = 50;
 
       const xAxisDataProp = xAxisProp.dataProp;
-      const xValues = data.map(
+      const xValues = data[0].data.map(
          (entry: DailyCastData) => entry[xAxisDataProp]
       ) as string[];
 
       const xScale = (width - margin * 2) / (xValues.length - 1);
 
       // draw x-axis labels
-      const xLabelStep = Math.ceil(xValues.length / 10); // show some subset of the dates
+      const xLabelStep = Math.ceil(xValues.length / 10);
       xValues.forEach((value, index) => {
          if (index % xLabelStep === 0) {
             const x = margin + index * xScale;
@@ -52,25 +57,31 @@ export const drawChart = ({
          }
       });
 
-      const yLabelOffset = 15; // offset for y-axis title
-      const xLabelOffset = 40; // offset for x-axis title
-      yAxisPropList.forEach((yAxisProp, yAxisIndex) => {
+      const yLabelOffset = 15;
+      const xLabelOffset = 40;
+      yAxisPropList.forEach((yAxisProp, dataSetIndex) => {
          if (yAxisProp.isShown !== false) {
             const yDataProp = yAxisProp.dataProp as WeatherProps;
-            const { min: minY, max: maxY } = getMinMax(data, yDataProp);
+            const { min: minY, max: maxY } = getMinMax(
+               data[dataSetIndex].data,
+               yDataProp
+            );
 
             const yScale = (height - margin * 2) / (maxY - minY);
 
             // draw y data
             ctx.beginPath();
-            ctx.strokeStyle = yAxisColors[yAxisIndex % yAxisColors.length];
-            data.forEach((entry, index) => {
+            ctx.strokeStyle = yAxisColors[dataSetIndex % yAxisColors.length];
+            data[dataSetIndex].data.forEach((entry, index) => {
                const x = margin + index * xScale;
-               const y = height - margin - (entry[yDataProp] - minY) * yScale;
-               if (index === 0) {
-                  ctx.moveTo(x, y);
-               } else {
-                  ctx.lineTo(x, y);
+               const yValue = entry[yDataProp];
+               if (yValue) {
+                  const y = height - margin - (yValue - minY) * yScale;
+                  if (index === 0) {
+                     ctx.moveTo(x, y);
+                  } else {
+                     ctx.lineTo(x, y);
+                  }
                }
             });
             ctx.stroke();
@@ -82,16 +93,15 @@ export const drawChart = ({
                const labelValue = minY + i * yLabelStep;
                const y = height - margin - (labelValue - minY) * yScale;
                ctx.fillText(
-                  // NOTE: it is possible to add title at the end of value - ${yAxisProp.title}
                   `${labelValue.toFixed(1)}`,
-                  yAxisIndex === 0 ? margin - 40 : width - margin + 20,
+                  dataSetIndex === 0 ? margin - 40 : width - margin + 20,
                   y
                );
             }
 
             // draw y-axis title
             const yAxisTitleX =
-               yAxisIndex === 0
+               dataSetIndex === 0
                   ? margin - yLabelOffset
                   : width - margin + yLabelOffset;
             const yAxisTitleY = height / 2;
@@ -116,19 +126,16 @@ export const drawChart = ({
       ctx.lineWidth = 12;
       ctx.textAlign = "left";
 
-      yAxisPropList.forEach((yAxisProp, yAxisIndex) => {
+      yAxisPropList.forEach((yAxisProp, dataSetIndex) => {
          if (yAxisProp.isShown !== false) {
-            // calculate legend position
-            const legendX = 8 + yAxisIndex * legendSpacing;
+            const legendX = 8 + dataSetIndex * legendSpacing;
 
-            // draw legend label
             ctx.fillText(yAxisProp.title, legendX + 16, 16);
 
-            // draw legend line
             ctx.beginPath();
             ctx.moveTo(legendX, 20);
             ctx.lineTo(legendX + 12, 20);
-            ctx.strokeStyle = yAxisColors[yAxisIndex % yAxisColors.length];
+            ctx.strokeStyle = yAxisColors[dataSetIndex % yAxisColors.length];
             ctx.stroke();
          }
       });
@@ -136,6 +143,12 @@ export const drawChart = ({
 };
 
 const getMinMax = (dataArray: DailyCastData[], property: WeatherProps) => {
-   const values = dataArray.map((entry) => entry[property]);
-   return { min: Math.min(...values), max: Math.max(...values) };
+   const values = dataArray
+      .map((entry) => entry[property])
+      .filter((value) => typeof value === "number") as number[]; // Filter out undefined values
+
+   return {
+      min: Math.min(...values),
+      max: Math.max(...values),
+   };
 };

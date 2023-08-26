@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
-import { AxisProp, DailyCastData } from "@/types";
 import { drawChart } from "@/components/common/canvas";
+import type { CastDataEntry, AxisProp } from "@/types";
 
 /**
  * A canvas-based chart component for rendering data.
@@ -8,7 +8,7 @@ import { drawChart } from "@/components/common/canvas";
  * @component
  * @param {number} width - The width of the canvas.
  * @param {number} height - The height of the canvas.
- * @param {DailyCastData[]} data - Array of data points to be plotted.
+ * @param {CastDataEntry[]} data - Array of data points to be plotted.
  * @param {AxisProp} xAxisProp - Configuration for the X-axis.
  * @param {AxisProp[]} yAxisPropList - List of configurations for Y-axes.
  */
@@ -16,7 +16,7 @@ import { drawChart } from "@/components/common/canvas";
 type ChartProps = {
    width?: number;
    height?: number;
-   data: DailyCastData[];
+   data: CastDataEntry[];
    xAxisProp: AxisProp;
    yAxisPropList: AxisProp[];
 };

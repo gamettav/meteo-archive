@@ -2,8 +2,13 @@ import { temp_key, time_key, ppt_key } from "./const";
 
 export type DailyCastData = {
    time: string;
-   temp: number;
-   ppt: number;
+   temp?: number;
+   ppt?: number;
+};
+
+export type CastDataEntry = {
+   type: WeatherProps;
+   data: DailyCastData[];
 };
 
 export type WeatherProps = typeof temp_key | typeof ppt_key;

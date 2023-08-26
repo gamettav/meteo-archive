@@ -1,4 +1,4 @@
-import { DailyCastData } from "../types";
+import type { DailyCastData, WeatherProps } from "../types";
 
 // types for IndexedDB and store configuration
 type ObjectStore = {
@@ -16,6 +16,7 @@ export type IDBConfig = {
 export type APIConfig = {
    apiUrl: string;
    storeName: string;
+   dataKey: WeatherProps;
 };
 
 const fetchAndSaveData = async (
@@ -24,7 +25,7 @@ const fetchAndSaveData = async (
    db: IDBDatabase
 ): Promise<void> => {
    try {
-      const { storeName, apiUrl } = apiConfig;
+      const { storeName, apiUrl, dataKey } = apiConfig;
       const response = await fetch(apiUrl);
       const data = await response.json();
 
@@ -33,15 +34,11 @@ const fetchAndSaveData = async (
 
       // save the response data to the IndexedDB
       data.forEach((item: DailyCastData) => {
-         objectStore.put(item);
+         objectStore.add({ time: item.time, [dataKey]: item[dataKey] });
       });
 
       transaction.oncomplete = () => {
          console.log(`Data saved to ${storeName} in IndexedDB`);
-      };
-
-      transaction.onerror = () => {
-         console.error(`Failed to save data to ${storeName} in IndexedDB`);
       };
    } catch (error) {
       console.error(

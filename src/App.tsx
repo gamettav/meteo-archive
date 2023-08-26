@@ -11,7 +11,7 @@ import { DEFAULT_YEAR_RANGE, generateYearList } from "./const";
 import { useTranslation } from "react-i18next";
 import { getCastData } from "./db";
 
-import type { DailyCastData } from "./types";
+import type { CastDataEntry } from "./types";
 
 const yearList = generateYearList(...DEFAULT_YEAR_RANGE);
 
@@ -19,7 +19,7 @@ function App() {
    const { t } = useTranslation();
    const [isTemperatureSelected, setIsTemperatureSelected] = useState(true);
    const [isPrecipitationSelected, setIsPrecipitationSelected] = useState(true);
-   const [data, setData] = useState<DailyCastData[]>([]);
+   const [data, setData] = useState<CastDataEntry[]>([]);
    const [startYear, setStartYear] = useState<number>();
    const [endYear, setEndYear] = useState<number>();
 
@@ -80,17 +80,23 @@ function App() {
 }
 
 const filterData = (
-   data: DailyCastData[],
+   data: CastDataEntry[],
    startYear: number | undefined,
    endYear: number | undefined
 ) => {
-   return data.filter(({ time }) => {
-      // filter data based on selected year range
-      if (startYear && endYear) {
-         const year = getYearFromDateString(time);
-         return isInRange(year, startYear, endYear);
-      }
-      return false; // or adjust behavior for no year range
+   return data.map((dataset) => {
+      const filteredDataset = {
+         type: dataset.type,
+         data: dataset.data.filter(({ time }) => {
+            // filter data based on selected year range
+            if (startYear && endYear) {
+               const year = getYearFromDateString(time);
+               return isInRange(year, startYear, endYear);
+            }
+            return false; // or adjust behavior for no year range
+         }),
+      };
+      return filteredDataset;
    });
 };
 

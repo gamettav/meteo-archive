@@ -1,21 +1,21 @@
 import React, { useEffect, useRef, useState } from "react";
-import { DailyCastData } from "@/types";
 import { Chart } from "./Canvas";
 import { Spinner } from "@components/atomic/Spinner";
 import { useTranslation } from "react-i18next";
 import { ppt_key, temp_key, time_key } from "@/const";
+import type { CastDataEntry } from "@/types";
 
 /**
  * A chart component for displaying weather data.
  *
  * @component
- * @param {DailyCastData[]} data - Array of weather data points.
+ * @param {CastDataEntry[]} data - Array of weather data points.
  * @param {boolean} isTemperatureSelected - Flag to show temperature data.
  * @param {boolean} isPrecipitationSelected - Flag to show precipitation data.
  */
 
 type WeatherChartProps = {
-   data: DailyCastData[];
+   data: CastDataEntry[];
    isTemperatureSelected?: boolean;
    isPrecipitationSelected?: boolean;
 };
