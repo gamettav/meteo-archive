@@ -4,7 +4,7 @@ import type { CastDataEntry, DailyCastData } from "../types";
 
 // generate API URL based on store name
 const DATA_FILE_NAME = "weather";
-const getAPIUrl = (storeName: string) => `/hystorical_data/${storeName}.json`;
+const getAPIUrl = (storeName: string) => `/historical_data/${storeName}.json`;
 
 // configuration for IndexedDB database
 const dbConfig: IDBConfig = {
