@@ -1,6 +1,6 @@
 # Meteo Archive
 
-This project is a visualization application that displays changes in temperature and precipitation levels over the past 120 years for a selected city. The application is built using TypeScript and React, and it uses the Canvas API to create interactive charts. The data is stored locally using IndexedDB.
+This project is a visualization application that displays changes in temperature and precipitation levels over the past 120 years for a selected city. The application is built using TypeScript and React, and it uses the Canvas API to create interactive charts. The data is stored locally using IndexedDB. I couldn't find an API that contains 120 years of historical cast data, so I use local json file.
 
 ## Table of Contents
 
