@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import {
    Header,
    Navdrawer,
@@ -9,9 +9,9 @@ import {
 import { getYearFromDateString, isInRange } from "./utils/dates";
 import { DEFAULT_YEAR_RANGE, generateYearList } from "./const";
 import { useTranslation } from "react-i18next";
-import { getCastData } from "./db";
 
 import type { CastDataEntry } from "./types";
+import { useData } from "./hooks/useData";
 
 const yearList = generateYearList(...DEFAULT_YEAR_RANGE);
 
@@ -19,29 +19,10 @@ function App() {
    const { t } = useTranslation();
    const [isTemperatureSelected, setIsTemperatureSelected] = useState(true);
    const [isPrecipitationSelected, setIsPrecipitationSelected] = useState(true);
-   const [data, setData] = useState<CastDataEntry[]>([]);
    const [startYear, setStartYear] = useState<number>();
    const [endYear, setEndYear] = useState<number>();
 
-   useEffect(() => {
-      // fetch data for chart when page mounts
-      const fetchData = async () => {
-         try {
-            const data = await getCastData();
-
-            if (data.length) {
-               setData(data);
-               // year list may be calculated based on data (map data and put it into set)
-               setStartYear(yearList[0]);
-               setEndYear(yearList[yearList.length - 1]);
-            }
-         } catch (err) {
-            console.error(err);
-         }
-      };
-
-      fetchData();
-   }, []);
+   const data = useData({ setStartYear, setEndYear, yearList });
 
    const handleToggleDataSelection = (chart: string, value: boolean) => {
       // toggle data selection handler

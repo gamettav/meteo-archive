@@ -22,6 +22,7 @@ type DrawChartParams = {
 
 const fontFamily = " Inter, Avenir, Helvetica, Arial, sans-serif";
 
+// it's better to split this fn
 export const drawChart = ({
    canvasRef,
    data,
